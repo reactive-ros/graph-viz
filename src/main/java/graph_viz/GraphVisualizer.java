@@ -2,16 +2,23 @@ package graph_viz;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 
 import com.jgraph.layout.JGraphFacade;
 import com.jgraph.layout.JGraphLayout;
+import com.jgraph.layout.graph.JGraphAnnealingLayout;
 import com.jgraph.layout.graph.JGraphSimpleLayout;
+import com.jgraph.layout.graph.JGraphSpringLayout;
+import com.jgraph.layout.hierarchical.JGraphHierarchicalLayout;
+import com.jgraph.layout.organic.JGraphOrganicLayout;
+import com.jgraph.layout.organic.JGraphSelfOrganizingOrganicLayout;
+import com.jgraph.layout.tree.JGraphCompactTreeLayout;
+import com.jgraph.layout.tree.JGraphRadialTreeLayout;
+import com.jgraph.layout.tree.JGraphTreeLayout;
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
@@ -41,38 +48,17 @@ public class GraphVisualizer {
         jgraph.setPreferredSize(DEFAULT_SIZE);
         jgraph.setBackground(DEFAULT_BG_COLOR);
 
-        JGraphLayout layout = new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_CIRCLE);
-        JGraphFacade facade = new JGraphFacade(jgraph);
+        // Layout nodes
+        JGraphFacade facade =
+                new JGraphFacade(jgraph, g.vertexSet()
+                                          .stream()
+                                          .filter(v -> Graphs.predecessorListOf(g, v).isEmpty())
+                                          .collect(Collectors.toList())
+                                          .toArray());
+        JGraphLayout layout = new JGraphHierarchicalLayout();
+        layout.run(facade);
         Map nested = facade.createNestedMap(true, true);
         jgraph.getGraphLayoutCache().edit(nested);
-
-        // Layout nodes
-        List<V> previous = new ArrayList<>();
-        for (V v : g.vertexSet())
-            if (Graphs.predecessorListOf(g, v).isEmpty())
-                previous.add(v);
-
-        List<List<V>> all = new ArrayList<>();
-        while (true) {
-            all.add(previous);
-
-            List<V> next = new ArrayList<>();
-
-            for (V v : previous)
-                next.addAll(Graphs.successorListOf(g, v));
-
-            if (next.isEmpty()) break;
-            previous = next;
-        }
-        int x = 100;
-        for (List<V> cur : all) {
-            int y = 100;
-            for (V v : cur) {
-                positionVertexAt(v, x, y);
-                y += 100;
-            }
-            x += 150;
-        }
 
         // Show in Frame
         JFrame frame = new JFrame();
@@ -99,26 +85,39 @@ public class GraphVisualizer {
 }
 
 
-/* -------------------------- LAYOUTS --------------------------------------
-JGraphLayout layout = new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_CIRCLE);
+// -------------------------- LAYOUTS --------------------------------------
+/*JGraphLayout layout = new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_CIRCLE);
 JGraphFacade facade = new JGraphFacade(jgraph);
 Map nested = facade.createNestedMap(true, true);
 jgraph.getGraphLayoutCache().edit(nested);*/
 
-/*JGraphFacade facade = new JGraphFacade(jgraph, roots.toArray());
-JGraphLayout layout = new JGraphOrganicLayout();
-layout.run(facade);
-Map nested = facade.createNestedMap(true, true);
-jgraph.getGraphLayoutCache().edit(nested);*/
+/*Set<V> visited = new HashSet<>();
+List<V> previous = g.vertexSet()
+        .stream()
+        .filter(v -> Graphs.predecessorListOf(g, v).isEmpty())
+        .collect(Collectors.toList());
+visited.addAll(previous);
+List<List<V>> all = new ArrayList<>();
+while (true) {
+    all.add(previous);
+    List<V> next = previous.stream()
+            .flatMap(v -> Graphs.successorListOf(g, v).stream())
+            .filter(v -> !visited.contains(v))
+            .collect(Collectors.toList());
 
-/*TopologicalOrderIterator<Transformer, DefaultEdge> iterator = new TopologicalOrderIterator<Transformer, DefaultEdge>(g);
-int x = 0, y = 0;
-Transformer last = null;
-while (iterator.hasNext()) {
-    Transformer cur = iterator.next();
-    if (last == null)
-        positionVertexAt(cur, x, y);
-    else if ()
+    if (next.isEmpty()) break; // stop searching
+    visited.addAll(next);
+    previous = next;
+}
+
+int x = 100;
+boolean dir = true;
+for (List<V> cur : all) {
+    int y = 100 + (dir ? 0 : -50);
+    for (V v : cur) {
+        positionVertexAt(v, x, y);
+        y += 100;
+    }
     x += 150;
-    last = cur;
+    dir = !dir;
 }*/

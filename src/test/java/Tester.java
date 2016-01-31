@@ -17,14 +17,7 @@ public class Tester {
     	GraphVisualizer viz = new GraphVisualizer();
 
     	// Define dataflow
-    	Stream<?> stream = 
-            Stream.just(1, 2, 3, 4, 5).collect((Func0<HashMap<Integer, String>>) HashMap::new, (m, i) -> {
-                    if (i % 2 == 0) m.put(i, Integer.toString(i));
-                }).map(h -> new HashSet<>(h.values())).map(c -> {
-                    String ret = "";
-                    for (String s : c) ret += s;
-                    return ret;
-                });
+    	Stream<?> stream = Stream.nat().map(i -> i + 1);
     	
     	// Visualize
     	viz.display(stream);
