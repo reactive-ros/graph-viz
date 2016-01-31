@@ -1,7 +1,9 @@
 intall: 
 	@./gradlew install
+update:
+	@./gradlew install --refresh-dependencies
 test:
-	@./gradlew test
+	@./gradlew test	
 idea: 
 	@./gradlew idea
 doc:

@@ -17,7 +17,10 @@ public class Tester {
     	GraphVisualizer viz = new GraphVisualizer();
 
     	// Define dataflow
-    	Stream<?> stream = Stream.nat().map(i -> i + 1);
+    	Stream<?> stream = Stream
+				.nat()
+				.map(i -> i + 1)
+				.map(i -> i + 1);
     	
     	// Visualize
     	viz.display(stream);

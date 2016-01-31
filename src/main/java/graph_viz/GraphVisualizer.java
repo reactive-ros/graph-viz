@@ -30,23 +30,21 @@ import org.reactive_ros.Stream;
 /**
  * @author Orestis Melkonian
  */
-public class GraphVisualizer {
+public final class GraphVisualizer {
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
     private static final Dimension DEFAULT_SIZE = new Dimension(1200, 600);
 
-    private JGraphModelAdapter adapter;
-
-    public void display(Stream stream) {
+    public static void display(Stream stream) {
         display(stream.getGraph());
     }
 
-    public <V, E> void display(DirectedPseudograph<V, E> g) {
-        adapter = new JGraphModelAdapter<>(g);
+    public static <V, E> void display(DirectedPseudograph<V, E> g) {
+        JGraphModelAdapter adapter = new JGraphModelAdapter<>(g);
 
         // Setup JGraph
         JGraph jgraph = new JGraph(adapter);
-        jgraph.setPreferredSize(DEFAULT_SIZE);
-        jgraph.setBackground(DEFAULT_BG_COLOR);
+//        jgraph.setPreferredSize(DEFAULT_SIZE);
+//        jgraph.setBackground(DEFAULT_BG_COLOR);
 
         // Layout nodes
         JGraphFacade facade =
@@ -62,25 +60,13 @@ public class GraphVisualizer {
 
         // Show in Frame
         JFrame frame = new JFrame();
-        frame.setSize(DEFAULT_SIZE);
+//        frame.setSize(DEFAULT_SIZE);
 //        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         frame.getContentPane().add(new JScrollPane(jgraph));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocation(0, 0);
         frame.pack();
         frame.setVisible(true);
-    }
-
-    private void positionVertexAt(Object vertex, int x, int y) {
-        DefaultGraphCell cell = adapter.getVertexCell(vertex);
-        Map attr = cell.getAttributes();
-        Rectangle2D b = GraphConstants.getBounds(attr);
-
-        GraphConstants.setBounds(attr, new Rectangle(x, y, ((int) b.getWidth()), (int) b.getHeight()));
-
-        Map cellAttr = new HashMap();
-        cellAttr.put(cell, attr);
-        adapter.edit(cellAttr, null, null, null);
     }
 }
 
@@ -120,4 +106,15 @@ for (List<V> cur : all) {
     }
     x += 150;
     dir = !dir;
+
+private static void positionVertexAt(JGraphModelAdapter adapter, Object vertex, int x, int y) {
+    DefaultGraphCell cell = adapter.getVertexCell(vertex);
+    Map attr = cell.getAttributes();
+    Rectangle2D b = GraphConstants.getBounds(attr);
+
+    GraphConstants.setBounds(attr, new Rectangle(x, y, ((int) b.getWidth()), (int) b.getHeight()));
+
+    Map cellAttr = new HashMap();
+    cellAttr.put(cell, attr);
+    adapter.edit(cellAttr, null, null, null);
 }*/
