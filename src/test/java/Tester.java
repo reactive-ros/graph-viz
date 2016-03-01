@@ -1,7 +1,7 @@
 import org.junit.Test;
-import org.reactive_ros.Stream;
+import org.rhea_core.Stream;
 import graph_viz.GraphVisualizer;
-import org.reactive_ros.util.functions.Func0;
+import org.rhea_core.util.functions.Func0;
 
 import java.util.HashMap;
 import java.util.HashSet;

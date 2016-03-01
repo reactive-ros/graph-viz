@@ -10,12 +10,16 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "com.github.reactive-ros"
+group = "com.github.rhea-flow"
 version = 1.0
 
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
 dependencies {	
-	// reactive-ros
-	compile 'com.github.reactive-ros:reactive-ros:-SNAPSHOT'
+	// rhea-flow
+	compile 'com.github.rhea-flow:rhea-core:-SNAPSHOT'
 
 	// Graph visualization  
 	compile 'jgraph:jgraph:5.13.0.0'

@@ -25,7 +25,7 @@ import org.jgraph.graph.GraphConstants;
 import org.jgrapht.Graphs;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DirectedPseudograph;
-import org.reactive_ros.Stream;
+import org.rhea_core.Stream;
 
 /**
  * @author Orestis Melkonian
