@@ -25,8 +25,9 @@ dependencies {
 	compile 'jgraph:jgraph:5.13.0.0'
 	compile 'org.jgrapht:jgrapht-ext:0.9.1'
 
-  // Testing
-  testCompile 'junit:junit:4.11'
+    // Testing
+    testCompile 'junit:junit:4.11'
+    testCompile 'com.github.rhea-flow:test-data:-SNAPSHOT'
 }
 
 test {

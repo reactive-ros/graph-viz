@@ -1,10 +1,7 @@
 import org.junit.Test;
 import org.rhea_core.Stream;
 import graph_viz.GraphVisualizer;
-import org.rhea_core.util.functions.Func0;
-
-import java.util.HashMap;
-import java.util.HashSet;
+import test_data.utilities.Threads;
 
 /**
  * @author Orestis Melkonian
@@ -13,20 +10,20 @@ public class Tester {
     
     @Test
     public void test() {
-    	// Setup
-    	GraphVisualizer viz = new GraphVisualizer();
 
     	// Define dataflow
-    	Stream<?> stream = Stream
+    	Stream<?> s = Stream
 				.nat()
 				.map(i -> i + 1)
 				.map(i -> i + 1);
+
+		Stream<?> s2 = Stream.just(0).id().take(1);
     	
     	// Visualize
-    	viz.display(stream);
+    	GraphVisualizer.display(s);
+		GraphVisualizer.displayAt(s2, 250, 0);
 
-    	try { Thread.sleep(Long.MAX_VALUE); }
-    	catch(Exception ignored) {}
+        Threads.sleep();
     }    
 
 }

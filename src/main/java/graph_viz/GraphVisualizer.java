@@ -37,8 +37,15 @@ public final class GraphVisualizer {
     public static void display(Stream stream) {
         display(stream.getGraph());
     }
+    public static void displayAt(Stream stream, int x, int y) {
+        displayAt(stream.getGraph(), x, y);
+    }
 
     public static <V, E> void display(DirectedPseudograph<V, E> g) {
+        displayAt(g, 0, 0);
+    }
+
+    public static <V, E> void displayAt(DirectedPseudograph<V, E> g, int x, int y) {
         JGraphModelAdapter adapter = new JGraphModelAdapter<>(g);
 
         // Setup JGraph
@@ -49,10 +56,10 @@ public final class GraphVisualizer {
         // Layout nodes
         JGraphFacade facade =
                 new JGraphFacade(jgraph, g.vertexSet()
-                                          .stream()
-                                          .filter(v -> Graphs.predecessorListOf(g, v).isEmpty())
-                                          .collect(Collectors.toList())
-                                          .toArray());
+                        .stream()
+                        .filter(v -> Graphs.predecessorListOf(g, v).isEmpty())
+                        .collect(Collectors.toList())
+                        .toArray());
         JGraphLayout layout = new JGraphHierarchicalLayout();
         layout.run(facade);
         Map nested = facade.createNestedMap(true, true);
@@ -64,7 +71,7 @@ public final class GraphVisualizer {
 //        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         frame.getContentPane().add(new JScrollPane(jgraph));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setLocation(0, 0);
+        frame.setLocation(x, y);
         frame.pack();
         frame.setVisible(true);
     }
